@@ -32,6 +32,9 @@ class Logstash < Scout::Plugin
     raw_stats  = JSON.parse(response.body)
     result     = {}
 
+    counter('events_in', raw_stats['events']['in'], :per => :second)
+    counter('events_out', raw_stats['events']['out'], :per => :second)
+
     result['jvm_thread_count'] = raw_stats['jvm']['threads']['count']
     result['jvm_heap_max_in_bytes'] = raw_stats['jvm']['mem']['heap_max_in_bytes']
     result['jvm_heap_used_in_bytes'] = raw_stats['jvm']['mem']['heap_used_in_bytes']
@@ -39,7 +42,7 @@ class Logstash < Scout::Plugin
     result['jvm_gc_old_collection_time'] = raw_stats['jvm']['gc']['collectors']['old']['collection_time_in_millis']
     result['jvm_gc_young_collection_time'] = raw_stats['jvm']['gc']['collectors']['young']['collection_time_in_millis']
     result['jvm_uptime'] = raw_stats['jvm']['uptime_in_millis']
-    result['events_in'] = raw_stats['events']['in']
+    result['events_duration'] = raw_stats['events']['duration_in_millis']
     result['events_queue_push_duration'] = raw_stats['events']['queue_push_duration_in_millis']
     result['input_current_connections'] = raw_stats['pipelines']['main']['plugins']['inputs'][0]['current_connections']
     result['input_peak_connections'] = raw_stats['pipelines']['main']['plugins']['inputs'][0]['peak_connections']
